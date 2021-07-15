@@ -60,7 +60,42 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        print("ConversionViewController loaded its view.")
+        
         updateCelsiusLabel()
+    }
+    
+    func getCurrentHour24() -> Int{
+        let date = Date()
+        let dateFormatter = DateFormatter()   // thread safety
+        dateFormatter.dateFormat = "HH:mm:ss"
+        
+        let time = dateFormatter.string(from: date)
+//        print(time)
+        
+        let endBound = String.Index(utf16Offset: 2, in: time)
+        let hr = String(time[time.startIndex..<endBound])
+        
+        return Int(hr)!
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let curHour = getCurrentHour24()
+        
+        /* now fixed sunrise and sunset time is used.
+         I think it should be obtained dynamically
+         by calulating from lat & lon or from another
+         app like weather. Leave it for improvement
+         in the future. Or a better way is to use the
+         brightness of system to change background
+        */
+        
+        let sunrise = 5, sunset = 20
+        if curHour >= sunset || curHour <= sunrise {
+            view.backgroundColor = UIColor.black
+        }
     }
     
     // 闭包
