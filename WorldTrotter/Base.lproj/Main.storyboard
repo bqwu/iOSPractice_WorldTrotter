@@ -100,6 +100,25 @@
             </objects>
             <point key="canvasLocation" x="1715.9420289855075" y="118.52678571428571"/>
         </scene>
+        <!--Web-->
+        <scene sceneID="Kk8-If-bTa">
+            <objects>
+                <viewController id="oJl-RM-6Xg" customClass="WebViewController" customModule="WorldTrotter" customModuleProvider="target" sceneMemberID="viewController">
+                    <wkWebView key="view" contentMode="scaleToFill" customUserAgent="" id="egW-rQ-n28">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <wkWebViewConfiguration key="configuration">
+                            <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                            <wkPreferences key="preferences"/>
+                        </wkWebViewConfiguration>
+                    </wkWebView>
+                    <tabBarItem key="tabBarItem" title="Web" image="Bignerdranch" id="UUP-Sc-qft"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4je-ys-ISR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="903" y="-588"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="vzE-kK-E0k">
             <objects>
@@ -113,6 +132,7 @@
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="K66-09-EsU"/>
                         <segue destination="isN-Dr-Hst" kind="relationship" relationship="viewControllers" id="Dna-Cx-3TD"/>
+                        <segue destination="oJl-RM-6Xg" kind="relationship" relationship="viewControllers" id="qJA-Z8-m3g"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bcp-Iv-dDf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -121,6 +141,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Bignerdranch" width="48.5" height="32.5"/>
         <image name="ConvertIcon" width="48.5" height="32.5"/>
         <image name="MapIcon" width="48.5" height="32.5"/>
         <systemColor name="systemOrangeColor">
