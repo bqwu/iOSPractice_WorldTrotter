@@ -14,6 +14,9 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     let navigationBarHeight = 44
     var statusBarHeight: CGFloat = 0
     
+    var progressBar = UIProgressView()
+    let progressBarKeyPath = "estimatedProgress"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        print("WebViewController loaded its view.")
@@ -39,6 +42,13 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         webView.load(myRequest)
         
         view.addSubview(webView)
+        
+        progressBar = UIProgressView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 30))
+        progressBar.progress = 0.0
+        progressBar.tintColor = UIColor.blue
+        webView.addSubview(progressBar)
+        
+        webView.addObserver(self, forKeyPath: progressBarKeyPath, options: .new, context: nil)
     }
         
     func addNavigationBar() {
@@ -77,4 +87,24 @@ class WebViewController: UIViewController, WKNavigationDelegate {
             self.webView.goForward()
         }
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == self.progressBarKeyPath {
+            self.progressBar.alpha = 1.0
+            self.progressBar.setProgress(Float(webView.estimatedProgress), animated: true)
+            if self.webView.estimatedProgress >= 1.0 {
+                UIView.animate(withDuration: 0.3, delay: 0.1, options: .curveEaseInOut, animations: { () -> Void in self.progressBar.alpha = 0.0 }, completion: { (finished: Bool) -> Void in self.progressBar.progress = 0 })
+            }
+        }
+    }
+   
+// not sure how to remove observer, but even without it everything goes well
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        webView.removeObserver(self, forKeyPath: self.progressBarKeyPath)
+    }
+    
+//    deinit {
+//        webView.removeObserver(self, forKeyPath: self.progressBarKeyPath)
+//    }
 }
