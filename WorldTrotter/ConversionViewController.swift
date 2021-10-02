@@ -22,8 +22,8 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
 //        else {
 //            celsiusLabel.text = "???"
 //        }
-        if let text = textField.text, let value = Double(text) {
-            fahrenHeitValues = Measurement(value: value, unit: UnitTemperature.fahrenheit)
+        if let text = textField.text, let number = numberFormatter.number(from: text) {
+            fahrenHeitValues = Measurement(value: number.doubleValue, unit: UnitTemperature.fahrenheit)
         }
         else {
             fahrenHeitValues = nil
@@ -77,18 +77,22 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
 //        print("Replacement text: \(string)")
 //        return true
         
-        let existingTextHasDecimalSeparator = textField.text?.range(of: ".")
-        let replacementTextHasDecimalSeparator = string.range(of: ".")
+        // consider different regions like Spain
+        let currentLocal = NSLocale.current
+        let decimalSeparator = currentLocal.decimalSeparator ?? "."
+        
+        let existingTextHasDecimalSeparator = textField.text?.range(of: decimalSeparator)
+        let replacementTextHasDecimalSeparator = string.range(of: decimalSeparator)
         
         // all illegal characters not allowed (added by bqwu)
         var legalSet = CharacterSet.decimalDigits
         legalSet.insert(charactersIn: ".")
+        legalSet.insert(charactersIn: ",")
         let illegalSet = legalSet.inverted
         
         let existingTextHasLetter = textField.text?.rangeOfCharacter(from: illegalSet)
         
         let replacementTextHasLetter = string.rangeOfCharacter(from: illegalSet)
-        
         
         if existingTextHasDecimalSeparator != nil, replacementTextHasDecimalSeparator != nil {
             return false
