@@ -8,25 +8,12 @@
 import UIKit
 
 class ConversionViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet var celsiusLabel: UILabel!
-    
-    var fahrenHeitValues: Measurement<UnitTemperature>?{
-        didSet {
-            updateCelsiusLabel()
-        }
-    }
-    
-    var celsiusValues: Measurement<UnitTemperature>? {
-        if let fahrenheitValue = fahrenHeitValues {
-            return fahrenheitValue.converted(to: UnitTemperature.celsius)
-        }
-        else{
-            return nil
-        }
-    }
-    
     @IBOutlet var textField: UITextField!
+    @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer){
+        textField.resignFirstResponder()
+    }
     
+    @IBOutlet var celsiusLabel: UILabel!
     @IBAction func fahrenHeitFieldEditingChanged(_ textField: UITextField) {
 //        celsiusLabel.text = textField.text
 //        if let text = textField.text, !text.isEmpty{
@@ -43,58 +30,28 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer){
-        textField.resignFirstResponder()
+    var fahrenHeitValues: Measurement<UnitTemperature>?{
+        didSet {
+            updateCelsiusLabel()
+        }
+    }
+    
+    var celsiusValues: Measurement<UnitTemperature>? {
+        if let fahrenheitValue = fahrenHeitValues {
+            return fahrenheitValue.converted(to: UnitTemperature.celsius)
+        }
+        else{
+            return nil
+        }
     }
     
     func updateCelsiusLabel(){
-        if let celsiusValues = celsiusValues {
-//            celsiusLabel.text = "\(celsiusValues.value)"
-            celsiusLabel.text = numberFormatter.string(from: NSNumber(value: celsiusValues.value))
+        if let celsiusValue = celsiusValues {
+//            celsiusLabel.text = "\(celsiusValue.value)"
+            celsiusLabel.text = numberFormatter.string(from: NSNumber(value: celsiusValue.value))
         }
         else{
             celsiusLabel.text = "???"
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        print("ConversionViewController loaded its view.")
-        
-        updateCelsiusLabel()
-    }
-    
-    func getCurrentHour24() -> Int{
-        let date = Date()
-        let dateFormatter = DateFormatter()   // thread safety
-        dateFormatter.dateFormat = "HH:mm:ss"
-        
-        let time = dateFormatter.string(from: date)
-//        print(time)
-        
-        let endBound = String.Index(utf16Offset: 2, in: time)
-        let hr = String(time[time.startIndex..<endBound])
-        
-        return Int(hr)!
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let curHour = getCurrentHour24()
-        
-        /* now fixed sunrise and sunset time is used.
-         I think it should be obtained dynamically
-         by calulating from lat & lon or from another
-         app like weather. Leave it for improvement
-         in the future. Or a better way is to use the
-         brightness of system to change background
-        */
-        
-        let sunrise = 5, sunset = 20
-        if curHour >= sunset || curHour <= sunrise {
-            view.backgroundColor = UIColor.black
         }
     }
     
@@ -106,6 +63,14 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         nf.maximumFractionDigits = 1
         return nf
     }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+//        print("ConversionViewController loaded its view.")
+        
+        updateCelsiusLabel()
+    }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 //        print("Curent text: \(textField.text)")
@@ -134,5 +99,38 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         else {
             return true
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let curHour = getCurrentHour24()
+        
+        /* now fixed sunrise and sunset time is used.
+         I think it should be obtained dynamically
+         by calulating from lat & lon or from another
+         app like weather. Leave it for improvement
+         in the future. Or a better way is to use the
+         brightness of system to change background
+        */
+        
+        let sunrise = 5, sunset = 20
+        if curHour >= sunset || curHour <= sunrise {
+            view.backgroundColor = UIColor.black
+        }
+    }
+    
+    func getCurrentHour24() -> Int{
+        let date = Date()
+        let dateFormatter = DateFormatter()   // thread safety
+        dateFormatter.dateFormat = "HH:mm:ss"
+        
+        let time = dateFormatter.string(from: date)
+//        print(time)
+        
+        let endBound = String.Index(utf16Offset: 2, in: time)
+        let hr = String(time[time.startIndex..<endBound])
+        
+        return Int(hr)!
     }
 }
